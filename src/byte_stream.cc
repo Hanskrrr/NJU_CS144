@@ -1,4 +1,7 @@
 #include "byte_stream.hh"
+#include <string>
+#include <algorithm>
+#include <deque>
 
 using namespace std;
 
@@ -27,7 +30,10 @@ void Writer::push( string data )
 
   uint64_t avail = capacity_ - buffer_.size();
   uint64_t to_push = min(avail, static_cast<uint64_t>(data.size()));
-  buffer_.append(data.substr(0, to_push));
+  //buffer_.append(data.substr(0, to_push));
+  for(uint64_t i = 0; i < to_push; ++i){
+    buffer_.push_back(data[i]);
+  }
   tot_bytes_pushed_ += to_push;
   return;
 }
@@ -77,6 +83,9 @@ void Reader::pop( uint64_t len )
   // Your code here.
   uint64_t to_pop = min(len, static_cast<uint64_t>(buffer_.size()));
   buffer_.erase(0, to_pop);
+  /*for(uint64_t i; i < to_pop; ++i){
+    buffer_.pop_front();
+  }*/
   tot_bytes_popped_ += to_pop;
 }
 
