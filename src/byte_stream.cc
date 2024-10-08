@@ -27,7 +27,7 @@ void Writer::push( string data )
 
   uint64_t avail = capacity_ - buffer_.size();
   uint64_t to_push = min(avail, static_cast<uint64_t>(data.size()));
-  buffer_.append(sata.substr(0, to_push));
+  buffer_.append(data.substr(0, to_push));
   tot_bytes_pushed_ += to_push;
   return;
 }
