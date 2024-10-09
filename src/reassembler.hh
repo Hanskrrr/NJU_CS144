@@ -1,12 +1,20 @@
 #pragma once
 
 #include "byte_stream.hh"
+#include <map>
+#include <string>
+#include <algorithm>
 
 class Reassembler
 {
 public:
   // Construct Reassembler to write into given ByteStream.
-  explicit Reassembler( ByteStream&& output ) : output_( std::move( output ) ) {}
+  explicit Reassembler( ByteStream&& output )
+   : output_( std::move( output ) ),
+     nxt_idx_(0),
+     unasmb_bytes_(0),
+     eof_(false),
+     unasmb_segments_(){}
 
   /*
    * Insert a new substring to be reassembled into a ByteStream.
@@ -42,4 +50,20 @@ public:
 
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
+  //size_t capacity_;
+  uint64_t nxt_idx_;
+  uint64_t unasmb_bytes_;
+  bool eof_;
+  struct Segment{
+    uint64_t sta_idx;
+    uint64_t end_idx;
+    std::string data;
+    uint64_t length() const {return end_idx - sta_idx;}
+
+    Segment() : sta_idx(0), end_idx(0), data("") {}
+
+    Segment(uint64_t start, uint64_t end, const std::string& data_str)
+            : sta_idx(start), end_idx(end), data(data_str) {}
+  };
+  std::map<uint64_t, Segment> unasmb_segments_;
 };
