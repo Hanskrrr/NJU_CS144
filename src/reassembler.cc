@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <iostream>
+
 using namespace std;
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring )
@@ -97,6 +99,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
         // update new_seg
         new_seg.sta_idx = merged_start;
         new_seg.end_idx = merged_end;
+        new_seg_length = merged_end - merged_start;
         new_seg.data = merged_data;
         
         if(unasmb_bytes_ >= ext_segments.length())
@@ -118,6 +121,10 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     // load new_seg
     unasmb_segments_[new_seg.sta_idx] = new_seg;
     unasmb_bytes_ += new_seg_length;
+
+    // test
+    cerr << new_seg.data << new_seg.length()<< endl;
+    // test
 
     // push the data
     it = unasmb_segments_.find(nxt_idx_);
