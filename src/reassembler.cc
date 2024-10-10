@@ -16,19 +16,25 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   // _popped_already_||||||||***ext_segments***|_____the_window_____||||||||||||
   // _______________________________________nxt_idx______________acp_end_____
 
-
+    if(is_last_substring && data.empty()){
+        if(!output_.writer().is_closed()){
+            output_.writer().close();
+        }
+        return;
+    }
   // determine the true start & end of the buffer
-      size_t capacity_remain = output_.writer().available_capacity();
+    size_t capacity_remain = output_.writer().available_capacity();
     uint64_t acp_end = nxt_idx_ + capacity_remain;
 
     uint64_t data_start = first_index;
     uint64_t data_end = first_index + data.size();
 
+    if (is_last_substring) {
+        end_byte_idx_ = data_end;
+    }
+
   // if the data is in the left side of the window
     if (data_end <= nxt_idx_) {
-        if (is_last_substring && eof_ && unasmb_bytes_ == 0) {
-            output_.writer().close();
-        }
         return;
     }
 
@@ -45,6 +51,10 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     if (data_end > acp_end) {
         data.resize(acp_end - data_start);
         data_end = acp_end;
+    }
+
+    if(data.empty()){
+        return;
     }
 
     Segment new_seg{ data_start, data_end, data };
@@ -88,8 +98,14 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
         new_seg.sta_idx = merged_start;
         new_seg.end_idx = merged_end;
         new_seg.data = merged_data;
+        
+        if(unasmb_bytes_ >= ext_segments.length())
+            unasmb_bytes_ -= ext_segments.length();
+        else{
+            unasmb_bytes_ = 0;
+            //assert(0);
+        }
 
-        unasmb_bytes_ -= ext_segments.length();
         to_erase.push_back(it);
 
         ++it;
@@ -109,14 +125,16 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
         Segment& seg = it->second;
         output_.writer().push(seg.data);
         nxt_idx_ += seg.length();
-        unasmb_bytes_ -= seg.length();
+        if (unasmb_bytes_ >= seg.length()) {
+            unasmb_bytes_ -= seg.length();
+        }
+        else {
+            unasmb_bytes_ = 0;
+        }
         it = unasmb_segments_.erase(it);
     }
 
-    if (is_last_substring) {
-        eof_ = true;
-    }
-    if (eof_ && !output_.writer().is_closed()) {// unasmb_bytes_ == 0 
+    if (nxt_idx_ == end_byte_idx_ && unasmb_bytes_ == 0 && !output_.writer().is_closed()) {// unasmb_bytes_ == 0 
         output_.writer().close();
     }
 

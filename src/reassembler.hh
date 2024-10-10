@@ -13,6 +13,7 @@ public:
    : output_( std::move( output ) ),
      nxt_idx_(0),
      unasmb_bytes_(0),
+     end_byte_idx_(UINT64_MAX),
      eof_(false),
      unasmb_segments_(){}
 
@@ -53,6 +54,7 @@ private:
   //size_t capacity_;
   uint64_t nxt_idx_;
   uint64_t unasmb_bytes_;
+  uint64_t end_byte_idx_;
   bool eof_;
   struct Segment{
     uint64_t sta_idx;
