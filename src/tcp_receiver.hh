@@ -27,4 +27,10 @@ public:
 
 private:
   Reassembler reassembler_;
+
+  size_t capacity_;
+  bool syn_recive_ {false};
+  bool fin_recive_ {false};
+  Wrap32 isn {0};
+  uint64_t ackno_;
 };
