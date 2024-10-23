@@ -16,7 +16,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   //(void)zero_point;
   //(void)checkpoint;
   //return {};
-  uint32_t seqno_diff = raw_value_ - zero_point.raw_value_;
+  uint32_t seqno_diff = this->raw_value_ - zero_point.raw_value_;
 
   uint64_t candidate = (checkpoint & 0xFFFFFFFF00000000) + seqno_diff;
 
