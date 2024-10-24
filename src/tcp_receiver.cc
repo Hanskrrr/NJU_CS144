@@ -57,7 +57,7 @@ TCPReceiverMessage TCPReceiver::send() const
         uint64_t bytes_written = reassembler_.writer().bytes_pushed();
         uint64_t abs_ackno = bytes_written + 1; // +1 accounts for SYN
 
-        // if FIN has been received and the input is ended, increment ackno for FIN
+        // if FIN has been received and the input is ended
         if (fin_recive_ && reassembler_.writer().is_closed()) {
             abs_ackno += 1; // +1 for FIN
         }
