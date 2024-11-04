@@ -18,18 +18,27 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   // _popped_already_||||||||***ext_segments***|_____the_window_____||||||||||||
   // _______________________________________nxt_idx______________acp_end_____
 
-    if(is_last_substring && data.empty()){
+    /*if(is_last_substring && data.empty()){
         if(!output_.writer().is_closed()){
             output_.writer().close();
         }
         return;
-    }
+    }*/
+    
+
   // determine the true start & end of the buffer
     size_t capacity_remain = output_.writer().available_capacity();
     uint64_t acp_end = nxt_idx_ + capacity_remain;
 
     uint64_t data_start = first_index;
     uint64_t data_end = first_index + data.size();
+
+    if(is_last_substring){
+        if(data_end == nxt_idx_){
+            output_.writer().close();
+            return;
+        }  
+    }
 
     if (is_last_substring) {
         end_byte_idx_ = data_end;
