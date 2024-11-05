@@ -11,14 +11,35 @@
 #include <optional>
 #include <queue>
 
+class Timer
+{
+public:
+    Timer(uint64_t init_RTO);
+
+    void elapse(uint64_t time_elapsed);   // Decrease the remaining time by elapsed time
+    void double_RTO();                    // Double the RTO value (for exponential backoff)
+    void reset();                         // Reset the timer to the current RTO value
+    void start();                         // Start the timer
+    void stop();                          // Stop the timer
+    bool expired() const;                 // Check if the timer has expired
+    bool is_stopped() const;              // Check if the timer is stopped or expired
+    void restore_RTO();                   // Restore RTO to the initial value
+    void restart();                       // Restart the timer
+
+private:
+    uint64_t timer;       
+    uint64_t initial_RTO; 
+    uint64_t RTO;         
+    bool running;         
+};
+
+
 class TCPSender
 {
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
   TCPSender( ByteStream&& input, Wrap32 isn, uint64_t initial_RTO_ms )
-    : input_( std::move( input ) ), isn_( isn ), initial_RTO_ms_( initial_RTO_ms ),
-     _next_seqno(isn), _ackno(0), _current_RTO(initial_RTO_ms),
-    _elapsed_time(0), _window_size(1460), _is_connected(false), _consecutive_retransmissions(0)
+    : input_( std::move( input ) ), isn_( isn ), initial_RTO_ms_( initial_RTO_ms )
   {}
 
   /* Generate an empty TCPSenderMessage */
@@ -51,14 +72,26 @@ private:
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
 
-  Wrap32 _next_seqno;
+  uint64_t next_seqno_ = 0;          
+  uint64_t ackno_ = 0;               
+  uint64_t window_size_ = 1;         
+  uint64_t retransmissions_ = 0;    
+  bool syn_sent_ = false;            
+  bool fin_sent_ = false; 
+
+  /*Wrap32 _next_seqno;
   Wrap32 _ackno;
   uint64_t _consecutive_retransmissions;
   uint64_t _current_RTO;
-  uint64_t _elapsed_time;
+  uint64_t _elapsed_time;*/
 
-  std::queue<TCPSenderMessage> _send_queue;
+  /*std::queue<TCPSenderMessage> _send_queue;
   uint64_t _window_size;
   bool _is_connected;
-  std::optional<TCPSenderMessage> _last_sent_segment;
+  std::optional<TCPSenderMessage> _last_sent_segment;*/
+  
+  Timer timer;                    
+
+  std::queue<std::shared_ptr<TCPSenderMessage>> messages_to_be_sent;
+  std::queue<std::shared_ptr<TCPSenderMessage>> outstanding_messages;
 };
