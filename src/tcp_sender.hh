@@ -16,15 +16,15 @@ class Timer
 public:
     Timer(uint64_t init_RTO);
 
-    void elapse(uint64_t time_elapsed);   // Decrease the remaining time by elapsed time
-    void double_RTO();                    // Double the RTO value (for exponential backoff)
-    void reset();                         // Reset the timer to the current RTO value
-    void start();                         // Start the timer
-    void stop();                          // Stop the timer
-    bool expired() const;                 // Check if the timer has expired
-    bool is_stopped() const;              // Check if the timer is stopped or expired
-    void restore_RTO();                   // Restore RTO to the initial value
-    void restart();                       // Restart the timer
+    void elapse(uint64_t time_elapsed);   // decrease the remaining time by elapsed time
+    void double_RTO();                    // double the RTO 
+    void reset();                         
+    void start();                         
+    void stop();                          
+    bool expired() const;                 
+    bool is_stopped() const;              
+    void restore_RTO();                   
+    void restart();                       
 
 private:
     uint64_t timer;       
@@ -80,17 +80,6 @@ private:
   bool syn_sent_ = false;            
   bool fin_sent_ = false; 
 
-  /*Wrap32 _next_seqno;
-  Wrap32 _ackno;
-  uint64_t _consecutive_retransmissions;
-  uint64_t _current_RTO;
-  uint64_t _elapsed_time;*/
-
-  /*std::queue<TCPSenderMessage> _send_queue;
-  uint64_t _window_size;
-  bool _is_connected;
-  std::optional<TCPSenderMessage> _last_sent_segment;*/
-  
   Timer timer;                    
   std::deque<TCPSenderMessage> outstanding_messages;
 
