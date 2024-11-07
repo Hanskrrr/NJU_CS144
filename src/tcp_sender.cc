@@ -13,39 +13,31 @@ void Timer::elapse(uint64_t time_elapsed){
         timer = (time_elapsed >= timer) ? 0 : timer - time_elapsed;
     }
 }
-
 void Timer::double_RTO(){
     //RTO = min(RTO * 2, static_cast<uint64_t>(TCPConfig::TIMEOUT_DFLT));
     RTO = RTO * 2;
 }
-
 void Timer::reset(){
     timer = RTO;
 }
-
 void Timer::start(){
     if (!running) {
         timer = RTO;
         running = true;
     }
 }
-
 void Timer::stop(){
     running = false;
 }
-
 bool Timer::expired() const{
     return running && timer == 0;
 }
-
 bool Timer::is_stopped() const{
     return !running;
 }
-
 void Timer::restore_RTO(){
     RTO = initial_RTO;
 }
-
 void Timer::restart(){
     reset();
     start();
@@ -161,10 +153,8 @@ void TCPSender::fill_window(const TransmitFunction& transmit)
             }
         }
 
-        
         size_t seg_len = syn_segment.sequence_length();
 
-    
         if (seg_len > window_remaining) {
             if (syn_segment.FIN) {
                 syn_segment.FIN = false;
@@ -202,7 +192,6 @@ void TCPSender::fill_window(const TransmitFunction& transmit)
         segment.seqno = Wrap32::wrap(next_seqno_, isn_);
         read(input_.reader(),payload_size,segment.payload);
 
-        // If the outbound stream is at EOF and we haven't sent FIN yet, and there is space in the window
         if (input_.reader().is_finished() && !fin_sent_ && window_remaining > segment.sequence_length()) {
             segment.FIN = true;
             fin_sent_ = true;
