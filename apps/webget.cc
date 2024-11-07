@@ -11,17 +11,17 @@ void get_URL( const string& host, const string& path )
 {
   TCPSocket socket;
 
-  socket.connect(Address(host, "http"));
+  socket.connect( Address( host, "http" ) );
 
-  socket.write("GET " + path + " HTTP/1.1\r\n");
-  socket.write("Host: " + host + "\r\n");
-  socket.write("Connection: close\r\n");
-  socket.write("\r\n");
+  socket.write( "GET " + path + " HTTP/1.1\r\n" );
+  socket.write( "Host: " + host + "\r\n" );
+  socket.write( "Connection: close\r\n" );
+  socket.write( "\r\n" );
 
   string resp;
 
-  while (!socket.eof()) {
-    socket.read(resp);
+  while ( !socket.eof() ) {
+    socket.read( resp );
     cout << resp;
   }
 }

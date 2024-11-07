@@ -26,9 +26,9 @@ protected:
   uint64_t capacity_;
   bool error_ {};
   std::string buffer_;
-  bool is_closed_ {false};
-  uint64_t tot_bytes_pushed_ {0};
-  uint64_t tot_bytes_popped_ {0};
+  bool is_closed_ { false };
+  uint64_t tot_bytes_pushed_ { 0 };
+  uint64_t tot_bytes_popped_ { 0 };
 };
 
 class Writer : public ByteStream

@@ -14,25 +14,24 @@
 class Timer
 {
 public:
-    Timer(uint64_t init_RTO);
+  Timer( uint64_t init_RTO );
 
-    void elapse(uint64_t time_elapsed);   // Decrease the remaining time by elapsed time
-    void double_RTO();                    // Double the RTO value (for exponential backoff)
-    void reset();                         // Reset the timer to the current RTO value
-    void start();                         // Start the timer
-    void stop();                          // Stop the timer
-    bool expired() const;                 // Check if the timer has expired
-    bool is_stopped() const;              // Check if the timer is stopped or expired
-    void restore_RTO();                   // Restore RTO to the initial value
-    void restart();                       // Restart the timer
+  void elapse( uint64_t time_elapsed ); // Decrease the remaining time by elapsed time
+  void double_RTO();                    // Double the RTO value (for exponential backoff)
+  void reset();                         // Reset the timer to the current RTO value
+  void start();                         // Start the timer
+  void stop();                          // Stop the timer
+  bool expired() const;                 // Check if the timer has expired
+  bool is_stopped() const;              // Check if the timer is stopped or expired
+  void restore_RTO();                   // Restore RTO to the initial value
+  void restart();                       // Restart the timer
 
 private:
-    uint64_t timer;       
-    uint64_t initial_RTO; 
-    uint64_t RTO;         
-    bool running;         
+  uint64_t timer;
+  uint64_t initial_RTO;
+  uint64_t RTO;
+  bool running;
 };
-
 
 class TCPSender
 {
@@ -72,12 +71,12 @@ private:
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
 
-  uint64_t next_seqno_ = 0;          
-  uint64_t ackno_ = 0;               
-  uint64_t window_size_ = 1;         
-  uint64_t retransmissions_ = 0;    
-  bool syn_sent_ = false;            
-  bool fin_sent_ = false; 
+  uint64_t next_seqno_ = 0;
+  uint64_t ackno_ = 0;
+  uint64_t window_size_ = 1;
+  uint64_t retransmissions_ = 0;
+  bool syn_sent_ = false;
+  bool fin_sent_ = false;
 
   /*Wrap32 _next_seqno;
   Wrap32 _ackno;
@@ -89,8 +88,8 @@ private:
   uint64_t _window_size;
   bool _is_connected;
   std::optional<TCPSenderMessage> _last_sent_segment;*/
-  
-  Timer timer;                    
+
+  Timer timer;
 
   std::queue<std::shared_ptr<TCPSenderMessage>> messages_to_be_sent;
   std::queue<std::shared_ptr<TCPSenderMessage>> outstanding_messages;

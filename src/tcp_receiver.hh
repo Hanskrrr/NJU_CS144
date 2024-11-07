@@ -28,9 +28,9 @@ public:
 private:
   Reassembler reassembler_;
 
-  bool syn_recive_ {false};
-  bool fin_recive_ {false};
-  //Wrap32 seqno {0};
-  Wrap32 isn {0};
-  uint64_t ackno_ {0};
+  bool syn_recive_ { false };
+  bool fin_recive_ { false };
+  // Wrap32 seqno {0};
+  Wrap32 isn { 0 };
+  uint64_t ackno_ { 0 };
 };
